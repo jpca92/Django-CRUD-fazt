@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.forms import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 
 def helloworld (request):
@@ -45,3 +45,29 @@ def signup(request):
 
 def tasks (request):
     return render(request, 'tasks.html')
+
+def signout(request):
+    logout(request)
+    return redirect('home')
+
+def signin(request):
+    # renderiza el formulario
+    if request.method == 'GET':
+        return render(request, 'signin.html',{
+            'form': AuthenticationForm
+        })
+    else:
+        # if method == 'POST', estamos enviando datos al servidor y pasa lo siguiente
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        print(request.POST)
+        # si el usuario no existe
+        if user is None:
+            return render(request, 'signin.html',{
+            'form': AuthenticationForm,
+            'error': 'username or password incorrect'
+            })
+        # Si user si tiene algo entonces, user existe
+        else:
+            login(request, user)
+            return redirect('tasks')
+    
