@@ -5,7 +5,7 @@ from django.contrib.auth.forms import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import TaskForm
-
+from .models import Task
 
 def helloworld (request):
     title = 'Hello World'
@@ -46,7 +46,10 @@ def signup(request):
     })
 
 def tasks (request):
-    return render(request, 'tasks.html')
+    # user = request.user solo muestra las tareas creadas por ese usuario
+    # datecompleted__isnull solo muestra tareas sin terminar
+    tasks = Task.objects.filter(user = request.user, datecompleted__isnull=True)
+    return render(request, 'tasks.html', {'tasks': tasks})
 
 def create_task(request):
     if request.method == 'GET':
