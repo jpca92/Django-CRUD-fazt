@@ -69,12 +69,32 @@ def create_task(request):
                 'form': TaskForm,
                 'error': 'Please enter valid data'
             })
+        
 def task_detail(request, task_id):
-    print(task_id)
-    # Esta linea arroja una pagina 404 si no encuentra la task con el id que solicitemos
-    task = get_object_or_404(Task, pk=task_id)
-    # task = Task.objects.get(pk=task_id)
-    return render(request, 'task_detail.html', {'task': task})
+    if request.method == 'GET':
+        # Esta linea arroja una pagina 404 si no encuentra la task con el id que solicitemos
+        task = get_object_or_404(Task, pk=task_id)
+        # task = Task.objects.get(pk=task_id)
+        form = TaskForm(instance=task)
+        return render(request, 'task_detail.html', {
+            'task': task,
+            'form': form
+            })
+    else:
+        try:
+            task = get_object_or_404(Task, pk=task_id, user = request.user)
+            form = TaskForm(request.POST, instance=task)
+            form.save()
+            return redirect('tasks')
+        except ValueError:
+            return render(request, 'task_detail.html', {
+                'task': task, 
+                'form': form,
+                'error': 'Error updating task'
+            })
+
+       
+
 
 def signout(request):
     logout(request)

@@ -4,5 +4,12 @@
 
     <h1>TASK DETAIL</h1>
     <p>{{task.title}}</p>
+    {{error}}
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button>Update</button>
+    </form>
+    
 
 {% endblock %}
