@@ -9,6 +9,7 @@ urlpatterns = [
     path('signup/', signup, name='signup'),
 
     path('tasks/', tasks, name='tasks' ),
+    path('tasks_completed/', tasks_completed, name='tasks_completed' ),
     path('tasks/create/', create_task, name= 'create_task'),
     path('tasks/<int:task_id>/', task_detail, name= 'task_detail'),
     path('tasks/<int:task_id>/complete', complete_task, name= 'complete_task'),
