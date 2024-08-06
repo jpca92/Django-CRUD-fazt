@@ -78,7 +78,7 @@ def create_task(request):
             return redirect('tasks')
         except ValueError:
             return render(request, 'create_task.html',{
-                'form': TaskForm,
+                'form': TaskForm(),
                 'error': 'Please enter valid data'
             })
 
